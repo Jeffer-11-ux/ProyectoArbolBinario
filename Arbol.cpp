@@ -197,3 +197,145 @@ void liberarArbol(Nodo *nodo) {
     }
 }
 
+int main() {
+    Nodo *raiz = NULL;
+    int opcion, id;
+    string nombre;
+
+    do {
+        cout << "\n=== ARBOL GENEALOGICO ===\n";
+        cout << "1. Insertar miembro\n";
+        cout << "2. Ver padre e hijos de un nodo\n";
+        cout << "3. Mostrar linea completa de ancestros\n";
+        cout << "4. Mostrar descendientes (directos e indirectos)\n";
+        cout << "5. Eliminar miembro\n";
+        cout << "6. Recorrido InOrden\n";
+        cout << "7. Recorrido PreOrden\n";
+        cout << "8. Recorrido PostOrden\n";
+        cout << "0. Salir\n";
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1: {
+                cout << "Ingrese ID: ";
+                cin >> id;
+                cin.ignore();
+                cout << "Ingrese nombre: ";
+                getline(cin, nombre);
+
+                if (nombre.empty()) {
+                    cout << "Error: El nombre no puede estar vacio.\n";
+                } else {
+                    bool insertado = false;
+                    raiz = insertar(raiz, id, nombre, insertado);
+                    if (insertado) {
+                        cout << "Miembro agregado.\n";
+                    }
+                }
+                break;
+            }
+
+            case 2: {
+                if (raiz == NULL) {
+                    cout << "El arbol esta vacio. Registre miembros primero.\n";
+                    break;
+                }
+                cout << "Ingrese el ID del nodo a consultar: ";
+                cin >> id;
+                Nodo *nodo = buscar(raiz, id);
+
+                if (nodo == NULL) {
+                    cout << "No se encontro un nodo con ese ID.\n";
+                } else {
+                    cout << "\nNodo seleccionado: [" << nodo->id << "] " << nodo->nombre << "\n";
+
+                    Nodo *padre = buscarPadre(raiz, id);
+                    if (padre != NULL) {
+                        cout << "Padre: [" << padre->id << "] " << padre->nombre << "\n";
+                    } else {
+                        cout << "Padre: Ninguno (es la raiz)\n";
+                    }
+
+                    if (nodo->izq != NULL) {
+                        cout << "Hijo izquierdo: [" << nodo->izq->id << "] " << nodo->izq->nombre << "\n";
+                    } else {
+                        cout << "Hijo izquierdo: Ninguno\n";
+                    }
+
+                    if (nodo->der != NULL) {
+                        cout << "Hijo derecho: [" << nodo->der->id << "] " << nodo->der->nombre << "\n";
+                    } else {
+                        cout << "Hijo derecho: Ninguno\n";
+                    }
+                }
+                break;
+            }
+
+            case 3:
+                if (raiz == NULL) {
+                    cout << "El arbol esta vacio. Registre miembros primero.\n";
+                } else {
+                    cout << "Ingrese el ID del nodo a consultar: ";
+                    cin >> id;
+                    mostrarAncestros(raiz, id);
+                }
+                break;
+
+            case 4:
+                if (raiz == NULL) {
+                    cout << "El arbol esta vacio. Registre miembros primero.\n";
+                } else {
+                    cout << "Ingrese el ID del nodo a consultar: ";
+                    cin >> id;
+                    mostrarDescendientes(raiz, id);
+                }
+                break;
+
+            case 5: {
+                if (raiz == NULL) {
+                    cout << "El arbol esta vacio. Registre miembros primero.\n";
+                } else {
+                    cout << "Ingrese el ID del miembro a eliminar: ";
+                    cin >> id;
+                    bool eliminado = false;
+                    raiz = eliminarNodo(raiz, id, eliminado);
+                    if (eliminado) {
+                        cout << "Miembro eliminado correctamente.\n";
+                    } else {
+                        cout << "No se encontro un nodo con ese ID.\n";
+                    }
+                }
+                break;
+            }
+
+            case 6:
+                cout << "\n--- Recorrido InOrden ---\n";
+                if (raiz == NULL) cout << "El arbol esta vacio.\n";
+                else inorden(raiz);
+                break;
+
+            case 7:
+                cout << "\n--- Recorrido PreOrden ---\n";
+                if (raiz == NULL) cout << "El arbol esta vacio.\n";
+                else preorden(raiz);
+                break;
+
+            case 8:
+                cout << "\n--- Recorrido PostOrden ---\n";
+                if (raiz == NULL) cout << "El arbol esta vacio.\n";
+                else postorden(raiz);
+                break;
+
+            case 0:
+                liberarArbol(raiz);
+                cout << "Saliendo...\n";
+                break;
+
+            default:
+                cout << "Opcion no valida.\n";
+        }
+    } while (opcion != 0);
+
+    return 0;
+}
