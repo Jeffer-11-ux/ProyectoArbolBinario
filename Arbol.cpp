@@ -1,5 +1,5 @@
 #include <iostream>
-#inlude <string>
+#include <string>
 using namespace std;
 
 struct Nodo {
