@@ -61,3 +61,75 @@ Nodo* buscarPadre(Nodo *actual, int id) {
     }
     return buscarPadre(actual->der, id);
 }
+
+//Jefferson 
+
+Nodo* encontrarMinimo(Nodo *nodo) {
+    while (nodo != NULL && nodo->izq != NULL) {
+        nodo = nodo->izq;
+    }
+    return nodo;
+}
+
+Nodo* eliminarNodo(Nodo *nodo, int id, bool &eliminado) {
+    if (nodo == NULL) {
+        eliminado = false;
+        return NULL;
+    }
+
+    if (id < nodo->id) {
+        nodo->izq = eliminarNodo(nodo->izq, id, eliminado);
+    } else if (id > nodo->id) {
+        nodo->der = eliminarNodo(nodo->der, id, eliminado);
+    } else {
+        eliminado = true;
+
+        if (nodo->izq == NULL && nodo->der == NULL) {
+            delete nodo;
+            return NULL;
+        }
+        else if (nodo->izq == NULL) {
+            Nodo *temp = nodo->der;
+            delete nodo;
+            return temp;
+        } else if (nodo->der == NULL) {
+            Nodo *temp = nodo->izq;
+            delete nodo;
+            return temp;
+        }
+        else {
+            Nodo *sucesor = encontrarMinimo(nodo->der);
+            nodo->id = sucesor->id;
+            nodo->nombre = sucesor->nombre;
+            bool aux = false;
+            nodo->der = eliminarNodo(nodo->der, sucesor->id, aux);
+        }
+    }
+    return nodo;
+}
+
+void preorden(Nodo *nodo) {
+    if (nodo != NULL) {
+        cout << "  [" << nodo->id << "] " << nodo->nombre << "\n";
+        preorden(nodo->izq);
+        preorden(nodo->der);
+    }
+}
+
+void inorden(Nodo *nodo) {
+    if (nodo != NULL) {
+        inorden(nodo->izq);
+        cout << "  [" << nodo->id << "] " << nodo->nombre << "\n";
+        inorden(nodo->der);
+    }
+}
+
+void postorden(Nodo *nodo) {
+    if (nodo != NULL) {
+        postorden(nodo->izq);
+        postorden(nodo->der);
+        cout << "  [" << nodo->id << "] " << nodo->nombre << "\n";
+    }
+}
+
+
