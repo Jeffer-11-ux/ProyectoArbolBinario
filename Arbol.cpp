@@ -132,4 +132,68 @@ void postorden(Nodo *nodo) {
     }
 }
 
+void mostrarAncestros(Nodo *raiz, int id) {
+    Nodo *objetivo = buscar(raiz, id);
+    if (objetivo == NULL) {
+        cout << "No se encontro un nodo con ese ID.\n";
+        return;
+    }
+
+    if (raiz->id == id) {
+        cout << "El nodo seleccionado es la raiz; no tiene ancestros.\n";
+        return;
+    }
+
+    cout << "Linea de ancestros (desde la raiz): ";
+    Nodo *actual = raiz;
+    while (actual != NULL && actual->id != id) {
+        cout << "[" << actual->id << "] " << actual->nombre << " -> ";
+        if (id < actual->id) {
+            actual = actual->izq;
+        } else {
+            actual = actual->der;
+        }
+    }
+    cout << "[" << objetivo->id << "] " << objetivo->nombre << " (Seleccionado)\n";
+}
+
+void mostrarDescendientes(Nodo *raiz, int id) {
+    Nodo *nodo = buscar(raiz, id);
+    if (nodo == NULL) {
+        cout << "No se encontro un nodo con ese ID.\n";
+        return;
+    }
+
+    cout << "\nNodo seleccionado: [" << nodo->id << "] " << nodo->nombre << "\n";
+
+    if (nodo->izq == NULL && nodo->der == NULL) {
+        cout << "El integrante no tiene descendientes registrados.\n";
+        return;
+    }
+
+    cout << "--- Descendientes directos ---\n";
+    if (nodo->izq != NULL) {
+        cout << "Hijo izquierdo: [" << nodo->izq->id << "] " << nodo->izq->nombre << "\n";
+    } else {
+        cout << "Hijo izquierdo: Ninguno\n";
+    }
+
+    if (nodo->der != NULL) {
+        cout << "Hijo derecho: [" << nodo->der->id << "] " << nodo->der->nombre << "\n";
+    } else {
+        cout << "Hijo derecho: Ninguno\n";
+    }
+
+    cout << "--- Descendencia completa (directos e indirectos) ---\n";
+    preorden(nodo->izq);
+    preorden(nodo->der);
+}
+
+void liberarArbol(Nodo *nodo) {
+    if (nodo != NULL) {
+        liberarArbol(nodo->izq);
+        liberarArbol(nodo->der);
+        delete nodo;
+    }
+}
 
